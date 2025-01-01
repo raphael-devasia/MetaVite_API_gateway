@@ -8,10 +8,15 @@ const dotenv = require("dotenv");
 const cors = require('cors');
 const bodyParser = require("body-parser");
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
+const carrier_routes_1 = __importDefault(require("./routes/carrier.routes"));
+const admin_routes_1 = __importDefault(require("./routes/admin.routes"));
+const shipper_routes_1 = __importDefault(require("./routes/shipper.routes"));
+const morgan = require("morgan");
 const detect = require("detect-port");
 dotenv.config();
 const app = (0, express_1.default)();
 const DEFAULT_PORT = 4000;
+app.use(morgan("combined"));
 app.use(express_1.default.json());
 app.use(cors({
     origin: "http://localhost:4200", // Replace this with your frontend's URL
@@ -21,6 +26,9 @@ app.use(cors({
 app.use(bodyParser.json());
 //THIS SECTION IS FOR THE ROUTES RELATED TO DIFFERENT SERVICES
 app.use(auth_routes_1.default);
+app.use(carrier_routes_1.default);
+app.use(admin_routes_1.default);
+app.use(shipper_routes_1.default);
 detect(DEFAULT_PORT).then((port) => {
     if (port === DEFAULT_PORT) {
         app.listen(port, () => console.log(`Server is running on port ${port}`));

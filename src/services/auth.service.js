@@ -9,53 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.registerUser = void 0;
+exports.inviteUser = exports.loginUser = exports.registerUser = void 0;
 const auth_repository_1 = require("../repositories/auth.repository");
-const uuid_1 = require("uuid");
-const messaging_service_1 = require("./messaging.service");
-const registerUser = (
-// email: string,
-// password: string,
-// role: string,
-// name: { firstName: string; lastName: string },
-// companyRefId:string,
-// token:string
-user) => __awaiter(void 0, void 0, void 0, function* () {
-    let data = user;
-    if (user.role === "shipperAdmin" || user.role === "carrierAdmin") {
-        user.companyRefId = generateCompanyRefId(user.role);
-    }
-    const userRegister = yield (0, auth_repository_1.registerUserInDB)(user.email, user.password, user.role, user.name, user.token, user.companyRefId);
-    const userId = userRegister.user.id;
-    data = Object.assign(Object.assign({}, data), { userId });
-    if (userRegister.user.role == 'carrierAdmin') {
-        try {
-            yield (0, messaging_service_1.publishToQueue)("carrierServiceQueue", JSON.stringify(data));
-            console.log("Message published to carrierServiceQueue");
-        }
-        catch (messageError) {
-            console.error("Error publishing to queue:", messageError);
-        }
-    }
-    else if (userRegister.user.role == "shipperAdmin") {
-        try {
-            yield (0, messaging_service_1.publishToQueue)("shipperServiceQueue", JSON.stringify(data));
-            console.log("Message published to shipperServiceQueue");
-        }
-        catch (messageError) {
-            console.error("Error publishing to queue:", messageError);
-        }
-    }
+const verify_repository_1 = require("../repositories/verify.repository");
+const registerUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
+    const userRegister = yield (0, auth_repository_1.registerUserInDB)(user);
     return userRegister;
 });
 exports.registerUser = registerUser;
 const loginUser = (username, password) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield (0, auth_repository_1.loginUserInDB)(username, password);
+    return yield (0, verify_repository_1.loginUserInDB)(username, password);
 });
 exports.loginUser = loginUser;
-// Helper function to generate a unique companyRefId
-const generateCompanyRefId = (role) => {
-    const prefix = role === "shipperAdmin" ? "SH" : "CA"; // Prefix for shipper or carrier
-    const uniqueId = (0, uuid_1.v4)().split("-")[0].toUpperCase();
-    return `${prefix}${uniqueId}`;
-};
+const inviteUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield (0, verify_repository_1.registerInvitation)(user);
+});
+exports.inviteUser = inviteUser;

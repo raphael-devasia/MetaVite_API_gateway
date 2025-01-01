@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUserInDB = exports.registerUserInDB = void 0;
+exports.InvitedUserVerification = exports.registerUserInDB = void 0;
 const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 const path_1 = __importDefault(require("path"));
@@ -16,10 +16,12 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
     oneofs: true,
 });
 const authProto = grpc.loadPackageDefinition(packageDefinition).auth;
-const client = new authProto.AuthService("localhost:3001", grpc.credentials.createInsecure());
-const registerUserInDB = (email, password, role, name, token, companyRefId) => {
+const auth_client = new authProto.AuthService("localhost:3001", grpc.credentials.createInsecure());
+const verification_client = new authProto.AuthService("localhost:3005", grpc.credentials.createInsecure());
+const registerUserInDB = (user) => {
     return new Promise((resolve, reject) => {
-        client.Register({ email, password, name, role, companyRefId, token }, (error, response) => {
+        console.log(user);
+        auth_client.Register({ user }, (error, response) => {
             if (error) {
                 reject(error);
             }
@@ -30,9 +32,10 @@ const registerUserInDB = (email, password, role, name, token, companyRefId) => {
     });
 };
 exports.registerUserInDB = registerUserInDB;
-const loginUserInDB = (username, password) => {
+const InvitedUserVerification = (user) => {
     return new Promise((resolve, reject) => {
-        client.Login({ username, password }, (error, response) => {
+        console.log(user);
+        verification_client.ValidateRegister({ user }, (error, response) => {
             if (error) {
                 reject(error);
             }
@@ -42,4 +45,4 @@ const loginUserInDB = (username, password) => {
         });
     });
 };
-exports.loginUserInDB = loginUserInDB;
+exports.InvitedUserVerification = InvitedUserVerification;
