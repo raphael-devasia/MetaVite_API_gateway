@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateLoadInfo = exports.getLoadInfo = exports.getAllShipperBids = void 0;
+exports.updateLoadInfo = exports.getLoadInfo = exports.getAllAdminBids = exports.getAllShipperBids = void 0;
 const load_repositor_1 = require("../repositories/load.repositor");
 const verify_repository_1 = require("../repositories/verify.repository");
 // Generic function to check authorization and fetch data
@@ -41,6 +41,12 @@ const getAllShipperBids = (token, id) => __awaiter(void 0, void 0, void 0, funct
     return yield fetchShipperResources(token, "GetShipperBids", id, load_repositor_1.fetchShipperBids);
 });
 exports.getAllShipperBids = getAllShipperBids;
+// Service to fetch all bids for Specific Shipper
+const getAllAdminBids = (token, id) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('the thing is ', token);
+    return yield fetchShipperResources(token, "GetAdminBids", id, load_repositor_1.fetchShipperBids);
+});
+exports.getAllAdminBids = getAllAdminBids;
 const getLoadInfo = (token, id) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("checking the value swapped tokn and id", id);
     return yield fetchShipperResources(token, "GetLoadInfo", id, load_repositor_1.fetchLoadData);

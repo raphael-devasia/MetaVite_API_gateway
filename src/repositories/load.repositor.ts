@@ -80,6 +80,21 @@ export const fetchBids = (id:string): Promise<ILoadData[]> => {
         })
     })
 }
+export const fetchActiveBids = (id: string): Promise<ILoadData[]> => {
+    return new Promise((resolve, reject) => {
+        console.log('the bid id is ',id);
+        
+        load_client.GetAllActiveBids({ id }, (error: any, response: any) => {
+            console.log("all bids received", response)
+
+            if (error) {
+                reject(error)
+            } else {
+                resolve(response)
+            }
+        })
+    })
+}
 
 export const addNewBid = (bid: string): Promise<any | null> => {
     return new Promise((resolve, reject) => {

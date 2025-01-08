@@ -8,9 +8,12 @@ import {
     getAllBids,
     getAllShipments,
     getTruck,
+    getAllPayments,
+    getPayment,
 } from "../services/resource.service" // Services for fetching data
 import { attachToken } from "../middlewares/auth.middleware"
 import { addDriverInfo, getDriver, updateDriverInfo, updateTruckInfo } from "../services/user.service"
+import { getAllAdminBids, getLoadInfo } from "../services/load.service"
 
 const router = express.Router()
 
@@ -115,20 +118,20 @@ router.get("/bids/:id", attachToken, async (req: Request, res: Response) => {
 })
 
 // Route to fetch all shipments
-router.get("/shipments", attachToken, async (req: Request, res: Response) => {
-     const token = req.query.token as string
-    try {
-        const response = await getAllShipments(token)
-        res.status(200).json(response)
-    } catch (error) {
-        res.status(500).json({
-            error:
-                error instanceof Error
-                    ? error.message
-                    : "An unknown error occurred",
-        })
-    }
-})
+// router.get("/shipments", attachToken, async (req: Request, res: Response) => {
+//      const token = req.query.token as string
+//     try {
+//         const response = await getAllShipments(token)
+//         res.status(200).json(response)
+//     } catch (error) {
+//         res.status(500).json({
+//             error:
+//                 error instanceof Error
+//                     ? error.message
+//                     : "An unknown error occurred",
+//         })
+//     }
+// })
 router.post(
     "/staff-driver/update-info/:id",
     attachToken,
@@ -240,6 +243,88 @@ router.get(
         }
     }
 )
+router.get(
+    "/shipments/:id",
+    attachToken,
+    async (req: Request, res: Response) => {
+        const token = req.query.token as string
+        const shipperId = req.params.id as string
+        console.log(shipperId)
 
+        try {
+            const response = await getAllAdminBids(token, shipperId)
+            console.log("the pickup response is ", response)
+
+            res.status(200).json(response)
+        } catch (error) {
+            res.status(500).json({
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "An unknown error occurred",
+            })
+        }
+    }
+)
+router.get(
+    "/load-info/:id",
+    attachToken,
+    async (req: Request, res: Response) => {
+        console.log("shipper info requested")
+
+        const id = req.params.id
+        const token = req.query.token as string
+
+        try {
+            const response = await getLoadInfo(token, id)
+            console.log(response)
+
+            res.status(200).json(response)
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({ error: error.message })
+            } else {
+                res.status(500).json({ error: "An unknown error occurred" })
+            }
+        }
+    }
+)
+router.get("/payments", attachToken, async (req: Request, res: Response) => {
+     const token = req.query.token as string
+     
+     
+    try {
+        
+        
+        const response = await getAllPayments(token)
+        res.status(200).json(response)
+    } catch (error) {
+        res.status(500).json({
+            error:
+                error instanceof Error
+                    ? error.message
+                    : "An unknown error occurred",
+        })
+    }
+})
+
+router.get("/payments/:id", attachToken, async (req: Request, res: Response) => {
+     const token = req.query.token as string
+     const loadId = req.params.id
+     
+    try {
+        
+        
+        const response = await getPayment(token, loadId)
+        res.status(200).json(response)
+    } catch (error) {
+        res.status(500).json({
+            error:
+                error instanceof Error
+                    ? error.message
+                    : "An unknown error occurred",
+        })
+    }
+})
 
 export default router

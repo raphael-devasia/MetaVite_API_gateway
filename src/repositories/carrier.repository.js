@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchTruckData = exports.fetchAllCompanyTrucks = exports.addNewTruck = exports.fetchAllCompanyDrivers = exports.updateDriverDetails = exports.postTruckUpdate = exports.postDriverOnBoarding = exports.fetchCarrierDetails = exports.fetchCarriers = exports.fetchVehicles = exports.fetchDrivers = exports.fetchDriverInformation = void 0;
+exports.fetchTruckData = exports.fetchAllCompanyTrucks = exports.addNewTruck = exports.fetchAllCompanyDrivers = exports.updateDriverDetails = exports.postCarrierUpdate = exports.postTruckUpdate = exports.postDriverOnBoarding = exports.fetchCarrierDetails = exports.fetchCarriers = exports.fetchVehicles = exports.fetchDrivers = exports.fetchDriverInformation = void 0;
 const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 const path_1 = __importDefault(require("path"));
@@ -116,6 +116,19 @@ const postTruckUpdate = (id, truck) => {
     });
 };
 exports.postTruckUpdate = postTruckUpdate;
+const postCarrierUpdate = (id, data) => {
+    return new Promise((resolve, reject) => {
+        carrier_client.PostCarrierUpdate({ id, data }, (error, response) => {
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(response);
+            }
+        });
+    });
+};
+exports.postCarrierUpdate = postCarrierUpdate;
 const updateDriverDetails = (id, driver) => {
     return new Promise((resolve, reject) => {
         carrier_client.updateDriverDetails({ id, driver }, (error, response) => {

@@ -10,7 +10,7 @@ import {
 } from "../repositories/carrier.repository"
 import { fetchVehicles } from "../repositories/carrier.repository"
 import { fetchCarriers } from "../repositories/carrier.repository"
-import { addNewBid, addNewLoad, fetchBids } from "../repositories/load.repositor"
+import { addNewBid, addNewLoad, fetchActiveBids, fetchBids } from "../repositories/load.repositor"
 import { fetchAllPayments, fetchPayment, newPaymentMethod, verifyPaymentMethod } from "../repositories/payment.repository"
 
 import {
@@ -113,9 +113,11 @@ export const getAllPayments = async (token: string) => {
     return await fetchResource(token, "GetPayments", fetchAllPayments)
 }
 
-// Service to fetch all bids
-export const getAllBids = async (token: string,id:string) => {
-    return await fetchShipperResources(token, "GetBids", id,fetchBids)
+
+
+// Service to fetch all Active bids
+export const getAllActiveBids = async (token: string,id:string) => {
+    return await fetchShipperResources(token, "GetBids", id,fetchActiveBids)
 }
 
 // Service to fetch all bids
@@ -195,7 +197,10 @@ export const addBid = async (token: string, truck: any) => {
     return await registerResource(token, "AddBid", truck, addNewBid)
 }
 
-
+// Service to fetch all bids
+export const getAllBids = async (token: string,id:string) => {
+    return await fetchShipperResources(token, "GetBids", id, fetchActiveBids)
+}
 
 export const getTruck = async (token: string, id: string) => {
     console.log("checking the value swapped tokn and id", id)

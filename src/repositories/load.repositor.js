@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postLoadUpdate = exports.addNewBid = exports.fetchBids = exports.fetchLoadData = exports.fetchShipperBids = exports.addNewLoad = void 0;
+exports.postLoadUpdate = exports.addNewBid = exports.fetchActiveBids = exports.fetchBids = exports.fetchLoadData = exports.fetchShipperBids = exports.addNewLoad = void 0;
 const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 const path_1 = __importDefault(require("path"));
@@ -76,6 +76,21 @@ const fetchBids = (id) => {
     });
 };
 exports.fetchBids = fetchBids;
+const fetchActiveBids = (id) => {
+    return new Promise((resolve, reject) => {
+        console.log('the bid id is ', id);
+        load_client.GetAllActiveBids({ id }, (error, response) => {
+            console.log("all bids received", response);
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(response);
+            }
+        });
+    });
+};
+exports.fetchActiveBids = fetchActiveBids;
 const addNewBid = (bid) => {
     return new Promise((resolve, reject) => {
         console.log("the bid is ", bid);

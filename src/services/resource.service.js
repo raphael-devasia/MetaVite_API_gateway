@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyRazorPay = exports.createRazorPay = exports.getCarrier = exports.getPickupInfo = exports.getClientInfo = exports.getTruck = exports.addBid = exports.addTruck = exports.getShipper = exports.getAllCompanyTrucks = exports.getAllCompanyDrivers = exports.getAllClients = exports.getAllPickups = exports.addPickup = exports.addLoad = exports.addClients = exports.getAllShipments = exports.getPayment = exports.getAllBids = exports.getAllPayments = exports.getAllShippers = exports.getAllCarriers = exports.getAllVehicles = exports.getAllStaffs = exports.getAllDrivers = void 0;
+exports.verifyRazorPay = exports.createRazorPay = exports.getCarrier = exports.getPickupInfo = exports.getClientInfo = exports.getTruck = exports.getAllBids = exports.addBid = exports.addTruck = exports.getShipper = exports.getAllCompanyTrucks = exports.getAllCompanyDrivers = exports.getAllClients = exports.getAllPickups = exports.addPickup = exports.addLoad = exports.addClients = exports.getAllShipments = exports.getPayment = exports.getAllActiveBids = exports.getAllPayments = exports.getAllShippers = exports.getAllCarriers = exports.getAllVehicles = exports.getAllStaffs = exports.getAllDrivers = void 0;
 const carrier_repository_1 = require("../repositories/carrier.repository");
 const carrier_repository_2 = require("../repositories/carrier.repository");
 const carrier_repository_3 = require("../repositories/carrier.repository");
@@ -73,11 +73,11 @@ const getAllPayments = (token) => __awaiter(void 0, void 0, void 0, function* ()
     return yield fetchResource(token, "GetPayments", payment_repository_1.fetchAllPayments);
 });
 exports.getAllPayments = getAllPayments;
-// Service to fetch all bids
-const getAllBids = (token, id) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield fetchShipperResources(token, "GetBids", id, load_repositor_1.fetchBids);
+// Service to fetch all Active bids
+const getAllActiveBids = (token, id) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield fetchShipperResources(token, "GetBids", id, load_repositor_1.fetchActiveBids);
 });
-exports.getAllBids = getAllBids;
+exports.getAllActiveBids = getAllActiveBids;
 // Service to fetch all bids
 const getPayment = (token, id) => __awaiter(void 0, void 0, void 0, function* () {
     return yield fetchShipperResources(token, "GetPayments", id, payment_repository_1.fetchPayment);
@@ -136,6 +136,11 @@ const addBid = (token, truck) => __awaiter(void 0, void 0, void 0, function* () 
     return yield registerResource(token, "AddBid", truck, load_repositor_1.addNewBid);
 });
 exports.addBid = addBid;
+// Service to fetch all bids
+const getAllBids = (token, id) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield fetchShipperResources(token, "GetBids", id, load_repositor_1.fetchActiveBids);
+});
+exports.getAllBids = getAllBids;
 const getTruck = (token, id) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("checking the value swapped tokn and id", id);
     return yield fetchShipperResources(token, "GetTruckDetails", id, carrier_repository_1.fetchTruckData);

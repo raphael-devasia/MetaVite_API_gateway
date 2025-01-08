@@ -1,5 +1,6 @@
 import {
     fetchDriverInformation,
+    postCarrierUpdate,
     postDriverOnBoarding,
     postTruckUpdate,
     updateDriverDetails,
@@ -39,6 +40,17 @@ export const updateTruckInfo = async (id: string, token: string, data: any) => {
     }
     return false
 }
+export const updateCarrierInfo = async (id: string, token: string, data: any) => {
+    console.log(token)
+
+    const isAuthorizedToAccess = await isAuthorized(data.token, "UpdateCompany")
+    if (isAuthorizedToAccess.isAuthorized) {
+        console.log(isAuthorized)
+
+        return await postCarrierUpdate(id, data)
+    }
+    return false
+}
 export const updateUserResource = async (id: string, token: string, target: any) => {
     console.log(token)
     console.log('the target body is ',target);
@@ -59,6 +71,7 @@ export const updateDriverInfo = async (
     data: any
 ) => {
     
+
 
     const isAuthorizedToAccess = await isAuthorized(
         data.token,

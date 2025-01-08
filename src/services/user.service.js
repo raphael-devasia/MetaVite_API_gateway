@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateDriverInfo = exports.updateUserResource = exports.updateTruckInfo = exports.addDriverInfo = exports.getDriver = void 0;
+exports.updateDriverInfo = exports.updateUserResource = exports.updateCarrierInfo = exports.updateTruckInfo = exports.addDriverInfo = exports.getDriver = void 0;
 const carrier_repository_1 = require("../repositories/carrier.repository");
 const shipper_repository_1 = require("../repositories/shipper.repository");
 const verify_repository_1 = require("../repositories/verify.repository");
@@ -42,6 +42,16 @@ const updateTruckInfo = (id, token, data) => __awaiter(void 0, void 0, void 0, f
     return false;
 });
 exports.updateTruckInfo = updateTruckInfo;
+const updateCarrierInfo = (id, token, data) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(token);
+    const isAuthorizedToAccess = yield (0, verify_repository_1.isAuthorized)(data.token, "UpdateCompany");
+    if (isAuthorizedToAccess.isAuthorized) {
+        console.log(verify_repository_1.isAuthorized);
+        return yield (0, carrier_repository_1.postCarrierUpdate)(id, data);
+    }
+    return false;
+});
+exports.updateCarrierInfo = updateCarrierInfo;
 const updateUserResource = (id, token, target) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(token);
     console.log('the target body is ', target);

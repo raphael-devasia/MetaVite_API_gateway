@@ -5,9 +5,9 @@ import {
     validateRegister,
     attachToken,
 } from "../middlewares/auth.middleware"
-import { addDriverInfo, getDriver, updateDriverInfo, updateTruckInfo } from "../services/user.service"
-import { addBid, addTruck, getAllBids, getAllCompanyDrivers, getAllCompanyTrucks, getAllPayments, getCarrier, getPayment, getShipper, getTruck } from "../services/resource.service"
-import { getAllShipperBids, getLoadInfo } from "../services/load.service"
+import { addDriverInfo, getDriver, updateCarrierInfo, updateDriverInfo, updateTruckInfo } from "../services/user.service"
+import { addBid, addTruck, getAllActiveBids, getAllBids, getAllCompanyDrivers, getAllCompanyTrucks, getAllPayments, getCarrier, getPayment, getShipper, getTruck } from "../services/resource.service"
+import { getAllShipperBids, getLoadInfo, updateLoadInfo } from "../services/load.service"
 
 const router = express.Router()
 
@@ -58,6 +58,24 @@ router.get("/bids/:id", attachToken, async (req: Request, res: Response) => {
     const id = req.params.id
     try {
         const response = await getAllBids(token, id)
+       
+
+        res.status(200).json(response)
+    } catch (error) {
+        res.status(500).json({
+            error:
+                error instanceof Error
+                    ? error.message
+                    : "An unknown error occurred",
+        })
+    }
+})
+// Route to fetch all bids
+router.get("/active-bids/:id", attachToken, async (req: Request, res: Response) => {
+    const token = req.query.token as string
+    const id = req.params.id
+    try {
+        const response = await getAllActiveBids(token, id)
        
 
         res.status(200).json(response)
@@ -136,6 +154,37 @@ console.log('the token is ',data);
         }
     }
 })
+router.post(
+    "/update-carrier-info/:id",
+    attachToken,
+    async (req: Request, res: Response) => {
+        const id = req.params.id
+        let token = req.query.token as string
+        if (!token) {
+            token = req.body.token
+        }
+        const data = req.body
+        console.log("the token is ", data)
+
+        try {
+            const response = await updateCarrierInfo(id, token, data)
+            console.log(response)
+
+            res.status(200).json(response)
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({ error: error.message })
+            } else {
+                res.status(500).json({ error: "An unknown error occurred" })
+            }
+        }
+    }
+)
+
+
+
+
+
 router.get("/get-drivers/:id", attachToken, async (req: Request, res: Response) => {
     const token = req.query.token as string
     const carrierId = req.params.id as string
@@ -416,6 +465,50 @@ router.get("/payments/:id", attachToken, async (req: Request, res: Response) => 
         })
     }
 })
+router.post(
+    "/update-load-info/:id",
+    attachToken,
+    async (req: Request, res: Response) => {
+        const id = req.params.id
+        const token = req.body.token as string
+        const target = req.body.id
+
+        try {
+            const response = await updateLoadInfo(id, token, target)
+            console.log(response)
+
+            res.status(200).json(response)
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({ error: error.message })
+            } else {
+                res.status(500).json({ error: "An unknown error occurred" })
+            }
+        }
+    }
+)
+router.post(
+    "/staff-driver/update-load-info/:id",
+    attachToken,
+    async (req: Request, res: Response) => {
+        const id = req.params.id
+        const token = req.body.token as string
+        const target = req.body.id
+
+        try {
+            const response = await updateLoadInfo(id, token, target)
+            console.log(response)
+
+            res.status(200).json(response)
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({ error: error.message })
+            } else {
+                res.status(500).json({ error: "An unknown error occurred" })
+            }
+        }
+    }
+)
 
 
 export default router

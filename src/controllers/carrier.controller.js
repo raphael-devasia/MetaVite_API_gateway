@@ -68,6 +68,22 @@ router.get("/bids/:id", auth_middleware_1.attachToken, (req, res) => __awaiter(v
         });
     }
 }));
+// Route to fetch all bids
+router.get("/active-bids/:id", auth_middleware_1.attachToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.query.token;
+    const id = req.params.id;
+    try {
+        const response = yield (0, resource_service_1.getAllActiveBids)(token, id);
+        res.status(200).json(response);
+    }
+    catch (error) {
+        res.status(500).json({
+            error: error instanceof Error
+                ? error.message
+                : "An unknown error occurred",
+        });
+    }
+}));
 router.post("/staff-driver/add-info/:id", auth_middleware_1.attachToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const token = req.query.token;
@@ -114,6 +130,28 @@ router.post("/truck/update-info/:id", auth_middleware_1.attachToken, (req, res) 
     console.log('the token is ', data);
     try {
         const response = yield (0, user_service_1.updateTruckInfo)(id, token, data);
+        console.log(response);
+        res.status(200).json(response);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            res.status(500).json({ error: error.message });
+        }
+        else {
+            res.status(500).json({ error: "An unknown error occurred" });
+        }
+    }
+}));
+router.post("/update-carrier-info/:id", auth_middleware_1.attachToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    let token = req.query.token;
+    if (!token) {
+        token = req.body.token;
+    }
+    const data = req.body;
+    console.log("the token is ", data);
+    try {
+        const response = yield (0, user_service_1.updateCarrierInfo)(id, token, data);
         console.log(response);
         res.status(200).json(response);
     }
@@ -347,6 +385,42 @@ router.get("/payments/:id", auth_middleware_1.attachToken, (req, res) => __await
                 ? error.message
                 : "An unknown error occurred",
         });
+    }
+}));
+router.post("/update-load-info/:id", auth_middleware_1.attachToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const token = req.body.token;
+    const target = req.body.id;
+    try {
+        const response = yield (0, load_service_1.updateLoadInfo)(id, token, target);
+        console.log(response);
+        res.status(200).json(response);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            res.status(500).json({ error: error.message });
+        }
+        else {
+            res.status(500).json({ error: "An unknown error occurred" });
+        }
+    }
+}));
+router.post("/staff-driver/update-load-info/:id", auth_middleware_1.attachToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const token = req.body.token;
+    const target = req.body.id;
+    try {
+        const response = yield (0, load_service_1.updateLoadInfo)(id, token, target);
+        console.log(response);
+        res.status(200).json(response);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            res.status(500).json({ error: error.message });
+        }
+        else {
+            res.status(500).json({ error: "An unknown error occurred" });
+        }
     }
 }));
 exports.default = router;

@@ -56,6 +56,12 @@ const registerResource = async (
 export const getAllShipperBids = async (token: string, id: string) => {
     return await fetchShipperResources(token, "GetShipperBids", id, fetchShipperBids)
 }
+// Service to fetch all bids for Specific Shipper
+export const getAllAdminBids = async (token: string, id: string) => {
+    console.log('the thing is ',token);
+    
+    return await fetchShipperResources(token, "GetAdminBids", id, fetchShipperBids)
+}
 
 export const getLoadInfo = async (token: string, id: string) => {
     console.log("checking the value swapped tokn and id", id)

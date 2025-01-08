@@ -122,6 +122,20 @@ export const postTruckUpdate = (id: string, truck:any): Promise<any> => {
         )
     })
 }
+export const postCarrierUpdate = (id: string, data: any): Promise<any> => {
+    return new Promise((resolve, reject) => {
+        carrier_client.PostCarrierUpdate(
+            { id, data },
+            (error: any, response: any) => {
+                if (error) {
+                    reject(error)
+                } else {
+                    resolve(response)
+                }
+            }
+        )
+    })
+}
 export const updateDriverDetails = (id: string, driver: any): Promise<ICompany> => {
     return new Promise((resolve, reject) => {
         carrier_client.updateDriverDetails(
